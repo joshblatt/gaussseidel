@@ -117,8 +117,29 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
         currents(4) = (-x(V5, V5)) / 25;
         currents(5) = (x(V5, V5) - x(V4, V4)) / 5;
         currents(6) = (x(V4, V4) - x(V3, V3)) / 2;
-        fprintf('     i12       i52       i32       i65       i54      i43\n');
+        fprintf('     i12       i52       i32       i65       i54       i43\n');
+        disp(currents);
+    elseif circuitNum == 2
+        % currents = [i12 i52 i32 i65 i54 i43 i53]
+        currents = [0 0 0 0 0 0 0];
+        currents(1) = (10 - x(V2, V2)) / 35;
+        currents(2) = (x(V5, V5) - x(V2, V2)) / 10;
+        currents(3) = (x(V3,V3) - x(V2, V2)) / 30;
+        currents(4) = (200 - x(V5, V5)) / 5;
+        currents(5) = (x(V5, V5) - x(V4, V4)) / 18;
+        currents(6) = (x(V4, V4) - x(V3, V3)) / 5;
+        currents(7) = (x(V5, V5) - x(V3, V3)) / 7;
+        fprintf('     i12       i52       i32       i65       i54       i43       i53\n');
+        disp(currents);
+    elseif circuitNum == 3
+        % currents = [i12 i25 i23 i35 i43]
+        currents = [0 0 0 0 0];
+        currents(1) = (80 - x(V2, V2)) / 5;
+        currents(2) = x(V2, V2) / 15;
+        currents(3) = (x(V2, V2) - x(V3, V3)) / 10;
+        currents(4) = x(V3, V3) / 25;
+        currents(5) = (50 - x(V3, V3)) / 20;
+        fprintf('     i12       i25       i23       i35       i43\n');
         disp(currents);
     end
-    
 end
