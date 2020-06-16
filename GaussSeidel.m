@@ -28,8 +28,7 @@ b3 = [16; 2.5];
 
 GaussSeidelSOR(a3, b3, 0.8, 100, 0.1, 3);
 
-% Prints the names of the different Voltages (ie V2, V3, etc)
-% given the constant vector
+% Prints the names of the different Voltages (ie V2, V3, etc) given the constant vector
 function printVoltageNames (b)
     n = length(b);
     for i = 2: n + 1
@@ -38,8 +37,7 @@ function printVoltageNames (b)
     fprintf('\n')
 end
 
-% Prints the names of the approximate errors (ie V2, V3, etc)
-% given the constant vector
+% Prints the names of the approximate errors (ie V2, V3, etc) given the constant vector
 function printApproxErrorNames (b)
     n = length(b);
     for i = 2: n + 1
@@ -55,12 +53,10 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     n = length(b); % Get length of coefficient matrix, save in n
     % x is the unknown solution vector (represented as an nxn matrix)
     x = zeros(n);
-    % x_0 is the previous iteration of x (used for approx error
-    % calculations)
+    % x_0 is the previous iteration of x (used for approx error calculations)
     x_0 = zeros(n);
     
-    % D is a matrix with the diagonal elements from A, with all other
-    % elements being 0
+    % D is a matrix with the diagonal elements from A, with all other elements being 0
     D = diag(diag(A));
     % Strictly upper triangular matrix of A
     U = triu(A,1);
@@ -70,19 +66,12 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     % (used in SOR)
     d = inv(D + lambda*L);
     
-    % Iterate from 1 - maxIterations
+    % Iterate from 1 - maxIterations (at most)
     for i = 1: maxIterations
         % Find the newest iteration of x based on L9.2 slide 6
         x = d * (lambda * b - (lambda * U + D * (lambda - 1)) * x_0);
-        %fprintf('Iteration Number %d \n', i);
-        %printVoltageNames(b);
-        % Display x as a horizontal vector
-        %disp(diag(x)');
         % Calculate approximate error
         ea = abs((diag(x) - diag(x_0)) * 100./ diag(x));
-        %printApproxErrorNames(b);
-        % Display approximate errors as horizontal vector
-        %disp(ea')
         % If the error is less than the max approximate error
         if max(ea) < maxApproxError
             
@@ -103,6 +92,7 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     printApproxErrorNames(x);
     disp(ea');
     
+    % Create variables for indicies of each voltage (to make calculations clearer)
     V2 = 1;
     V3 = 2;
     V4 = 3;
@@ -111,6 +101,7 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     if circuitNum == 1
         % currents = [i12 i52 i32 i65 i54 i43]
         currents = [0 0 0 0 0 0];
+        % Use Ohm's law to calculate currents based on given circuit
         currents(1) = (200 - x(V2, V2)) / 10;
         currents(2) = (x(V5, V5) - x(V2, V2)) / 5;
         currents(3) = (x(V3,V3) - x(V2, V2)) / 20;
@@ -122,6 +113,7 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     elseif circuitNum == 2
         % currents = [i12 i52 i32 i65 i54 i43 i53]
         currents = [0 0 0 0 0 0 0];
+        % Use Ohm's law to calculate currents based on given circuit
         currents(1) = (10 - x(V2, V2)) / 35;
         currents(2) = (x(V5, V5) - x(V2, V2)) / 10;
         currents(3) = (x(V3,V3) - x(V2, V2)) / 30;
@@ -134,6 +126,7 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     elseif circuitNum == 3
         % currents = [i12 i25 i23 i35 i43]
         currents = [0 0 0 0 0];
+        % Use Ohm's law to calculate currents based on given circuit
         currents(1) = (80 - x(V2, V2)) / 5;
         currents(2) = x(V2, V2) / 15;
         currents(3) = (x(V2, V2) - x(V3, V3)) / 10;
