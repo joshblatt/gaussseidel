@@ -1,5 +1,10 @@
 clear; clc;
 
+V2 = 1;
+V3 = 2;
+V4 = 3;
+V5 = 4;
+
 % Coeffcient matrix for Circuit 1
 a1 = [0.35 -0.05 0 -0.2;
      -0.05 0.55 -0.5 0;
@@ -8,9 +13,7 @@ a1 = [0.35 -0.05 0 -0.2;
 % Constant vector for Circuit 1
 b1 = [20; 0; 0; 0];
 
-V1 = GaussSeidelSOR(a1, b1, 0.8, 100, 0.1);
-printFinalResult(V1);
-disp((linsolve(a1, b1))');
+GaussSeidelSOR(a1, b1, 0.8, 100, 0.1, 1);
 
 % Coefficient matrix for Circuit 2
 a2 = [17/105 -1/30 0 -1/10;
@@ -20,9 +23,7 @@ a2 = [17/105 -1/30 0 -1/10;
 % Constant vector for Circuit 2
 b2 = [2/7; 0; 0; 40];
 
-V2 = GaussSeidelSOR(a2, b2, 1.5, 100, 0.1);
-printFinalResult(V2);
-disp((linsolve(a2, b2))');
+GaussSeidelSOR(a2, b2, 1.5, 100, 0.1, 2);
 
 % Coefficient matrix for Circuit 3
 a3 = [11/30 -1/10;
@@ -30,8 +31,7 @@ a3 = [11/30 -1/10;
 % Constant vector for Circuit 3
 b3 = [16; 2.5];
 
-V3 = GaussSeidelSOR(a3, b3, 0.8, 100, 0.1);
-printFinalResult(V3);
+GaussSeidelSOR(a3, b3, 0.8, 100, 0.1, 3);
 
 % Prints the names of the different Voltages (ie V2, V3, etc)
 % given the constant vector
@@ -53,20 +53,10 @@ function printApproxErrorNames (b)
     fprintf('\n')
 end
 
-% Prints the voltages and currents
-function printFinalResult(Voltages)
-    fprintf('Final Result\n');
-    printVoltageNames(Voltages);
-    disp(diag(Voltages)');
-    
-%     if circuitNum == 1
-%         currents = 1:6;
-%     end
-end
-
 % Function that does Gauss Seidel SOR given A (coefficient matrix)
-% B (constant vector), lambda, maxIterations, and the maxApproximateError
-function [x] = GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError)
+% B (constant vector), lambda (where 0 < lambda < 2), maxIterations,
+% maxApproximateError (%), and the circuitNum
+function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     n = length(b); % Get length of coefficient matrix, save in n
     % x is the unknown solution vector (represented as an nxn matrix)
     x = zeros(n);
@@ -100,10 +90,21 @@ function [x] = GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError)
         %disp(ea')
         % If the error is less than the max approximate error
         if max(ea) < maxApproxError
+            
             % Exit the loop (answer has been found)
             break;
         end
         % Set previous value of x to x for next iteration
         x_0 = x;
     end
+    
+    fprintf('Circuit: %d\n', circuitNum);
+    fprintf('Iteration Number %d \n', i);
+    fprintf('Lambda: %.1f\n', lambda);
+    
+    printVoltageNames(x);
+    disp(diag(x)');
+    
+    printApproxErrorNames(x);
+    disp(ea');
 end
