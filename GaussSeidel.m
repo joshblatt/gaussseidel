@@ -1,10 +1,5 @@
 clear; clc;
 
-V2 = 1;
-V3 = 2;
-V4 = 3;
-V5 = 4;
-
 % Coeffcient matrix for Circuit 1
 a1 = [0.35 -0.05 0 -0.2;
      -0.05 0.55 -0.5 0;
@@ -107,4 +102,23 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     
     printApproxErrorNames(x);
     disp(ea');
+    
+    V2 = 1;
+    V3 = 2;
+    V4 = 3;
+    V5 = 4;
+    
+    if circuitNum == 1
+        % currents = [i12 i52 i32 i65 i54 i43]
+        currents = [0 0 0 0 0 0];
+        currents(1) = (200 - x(V2, V2)) / 10;
+        currents(2) = (x(V5, V5) - x(V2, V2)) / 5;
+        currents(3) = (x(V3,V3) - x(V2, V2)) / 20;
+        currents(4) = (-x(V5, V5)) / 25;
+        currents(5) = (x(V5, V5) - x(V4, V4)) / 5;
+        currents(6) = (x(V4, V4) - x(V3, V3)) / 2;
+        fprintf('     i12       i52       i32       i65       i54      i43\n');
+        disp(currents);
+    end
+    
 end
