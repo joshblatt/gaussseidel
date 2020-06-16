@@ -10,6 +10,7 @@ b1 = [20; 0; 0; 0];
 
 GaussSeidelSOR(a1, b1, 0.8, 100, 0.1, 1);
 
+
 % Coefficient matrix for Circuit 2
 a2 = [17/105 -1/30 0 -1/10;
     -1/30 79/210 -1/5 -1/7;
@@ -44,6 +45,62 @@ function printApproxErrorNames (b)
         fprintf('     Ea%d  ', i)
     end
     fprintf('\n')
+end
+
+% Calculates the currents given the voltages and circuit number and prints out the result
+function calculateCurrents(x, circuitNum)
+    % Create variables for indicies of each voltage (to make calculations clearer)
+    V2 = 1;
+    V3 = 2;
+    V4 = 3;
+    V5 = 4;
+    
+    if circuitNum == 1
+        % currents = [i12 i52 i32 i65 i54 i43]
+        currents = [0 0 0 0 0 0];
+        % Use Ohm's law to calculate currents based on given circuit
+        currents(1) = (200 - x(V2)) / 10;
+        currents(2) = (x(V5) - x(V2)) / 5;
+        currents(3) = (x(V3) - x(V2)) / 20;
+        currents(4) = (-x(V5)) / 25;
+        currents(5) = (x(V5) - x(V4)) / 5;
+        currents(6) = (x(V4) - x(V3)) / 2;
+        fprintf('     i12       i52       i32       i65       i54       i43\n');
+        disp(currents);
+    elseif circuitNum == 2
+        % currents = [i12 i52 i32 i65 i54 i43 i53]
+        currents = [0 0 0 0 0 0 0];
+        % Use Ohm's law to calculate currents based on given circuit
+        currents(1) = (10 - x(V2)) / 35;
+        currents(2) = (x(V5) - x(V2)) / 10;
+        currents(3) = (x(V3) - x(V2)) / 30;
+        currents(4) = (200 - x(V5)) / 5;
+        currents(5) = (x(V5) - x(V4)) / 18;
+        currents(6) = (x(V4) - x(V3)) / 5;
+        currents(7) = (x(V5) - x(V3)) / 7;
+        fprintf('     i12       i52       i32       i65       i54       i43       i53\n');
+        disp(currents);
+    elseif circuitNum == 3
+        % currents = [i12 i25 i23 i35 i43]
+        currents = [0 0 0 0 0];
+        % Use Ohm's law to calculate currents based on given circuit
+        currents(1) = (80 - x(V2)) / 5;
+        currents(2) = x(V2) / 15;
+        currents(3) = (x(V2) - x(V3)) / 10;
+        currents(4) = x(V3) / 25;
+        currents(5) = (50 - x(V3)) / 20;
+        fprintf('     i12       i25       i23       i35       i43\n');
+        disp(currents);
+    end
+end
+
+% Calculates voltage vector using linsolve, calculates currents, and prints result
+function linsolveEquivalent(A, b, circuitNum)
+    fprintf('MATLAB Equation Solver Equivalent\n');
+    x = linsolve(A, b);
+    printVoltageNames(x);
+    disp(x');
+    calculateCurrents(x, circuitNum);
 end
 
 % Function that does Gauss Seidel SOR given A (coefficient matrix)
@@ -86,53 +143,17 @@ function GaussSeidelSOR(A, b, lambda, maxIterations, maxApproxError, circuitNum)
     fprintf('Iteration Number %d \n', i);
     fprintf('Lambda: %.1f\n', lambda);
     
+    % Prints voltages + labels
     printVoltageNames(x);
     disp(diag(x)');
     
+    % Prints approximate errors + labels
     printApproxErrorNames(x);
     disp(ea');
     
-    % Create variables for indicies of each voltage (to make calculations clearer)
-    V2 = 1;
-    V3 = 2;
-    V4 = 3;
-    V5 = 4;
+    % Calculates and prints currents
+    calculateCurrents(diag(x)', circuitNum);
     
-    if circuitNum == 1
-        % currents = [i12 i52 i32 i65 i54 i43]
-        currents = [0 0 0 0 0 0];
-        % Use Ohm's law to calculate currents based on given circuit
-        currents(1) = (200 - x(V2, V2)) / 10;
-        currents(2) = (x(V5, V5) - x(V2, V2)) / 5;
-        currents(3) = (x(V3,V3) - x(V2, V2)) / 20;
-        currents(4) = (-x(V5, V5)) / 25;
-        currents(5) = (x(V5, V5) - x(V4, V4)) / 5;
-        currents(6) = (x(V4, V4) - x(V3, V3)) / 2;
-        fprintf('     i12       i52       i32       i65       i54       i43\n');
-        disp(currents);
-    elseif circuitNum == 2
-        % currents = [i12 i52 i32 i65 i54 i43 i53]
-        currents = [0 0 0 0 0 0 0];
-        % Use Ohm's law to calculate currents based on given circuit
-        currents(1) = (10 - x(V2, V2)) / 35;
-        currents(2) = (x(V5, V5) - x(V2, V2)) / 10;
-        currents(3) = (x(V3,V3) - x(V2, V2)) / 30;
-        currents(4) = (200 - x(V5, V5)) / 5;
-        currents(5) = (x(V5, V5) - x(V4, V4)) / 18;
-        currents(6) = (x(V4, V4) - x(V3, V3)) / 5;
-        currents(7) = (x(V5, V5) - x(V3, V3)) / 7;
-        fprintf('     i12       i52       i32       i65       i54       i43       i53\n');
-        disp(currents);
-    elseif circuitNum == 3
-        % currents = [i12 i25 i23 i35 i43]
-        currents = [0 0 0 0 0];
-        % Use Ohm's law to calculate currents based on given circuit
-        currents(1) = (80 - x(V2, V2)) / 5;
-        currents(2) = x(V2, V2) / 15;
-        currents(3) = (x(V2, V2) - x(V3, V3)) / 10;
-        currents(4) = x(V3, V3) / 25;
-        currents(5) = (50 - x(V3, V3)) / 20;
-        fprintf('     i12       i25       i23       i35       i43\n');
-        disp(currents);
-    end
+    % Calculates voltages using linsolve and prints result
+    linsolveEquivalent(A, b, circuitNum);
 end
