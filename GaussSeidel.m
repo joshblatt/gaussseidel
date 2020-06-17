@@ -1,3 +1,6 @@
+% Josh Blatt
+% 20771771
+
 clear; clc;
 
 % Coeffcient matrix for Circuit 1
@@ -8,7 +11,7 @@ a1 = [0.35 -0.05 0 -0.2;
 % Constant vector for Circuit 1
 b1 = [20; 0; 0; 0];
 
-GaussSeidelSOR(a1, b1, 0.8, 100, 0.1, 1);
+GaussSeidelSOR(a1, b1, 1.6, 100, 0.1, 1);
 
 
 % Coefficient matrix for Circuit 2
